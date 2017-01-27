@@ -4,35 +4,52 @@ import { Component } from '@angular/core';
   selector: 'my-app',
   template: `
     <h1>Hello {{name}}</h1>
-    <a href=# (click)=fetch()>fetch</a><br>
-    status: <span>{{status}}</span><br>
-    text: <pre>{{text}}</pre><br>
+    <a href=# (click)=fetch()>fetch</a>
+    <a href=# *ngIf="progress.length" (click)=clear()>clear</a><br>
+    progress:
+    <span *ngIf="!progress.length">---</span>
+    <span *ngFor="let entry of progress; let last = last">
+      {{ entry }}{{ last ? '' : ', ' }}
+    </span><br>
+    response text: {{text}}<br>
   `,
 })
 export class AppComponent  {
   name = 'Angular';
-  status = "-------";
-  text = '-------';
+  progress = [];
+  text = '---';
 
   fetch() {
-    var fetchResult = window['fetch']('');
-    console.log('fetching');
-    this.status = 'fetching';
+    this.clear();
+
+    var logProgress = (state) => {
+      console.log(state);
+      this.progress.push(state);
+    }
+
+    logProgress('start');
+
+    var fetchResult = window['fetch']('fetch.txt');
+    logProgress('fetching');
+
     fetchResult.then((res: any) => {
-      console.log('done');
-      this.status = 'done';
-      var textResult = res.text()
+      logProgress('fetch done');
+      var textResult = res.text();
       if (textResult instanceof window['ZoneAwarePromise']) {
         console.log('textResult is ZoneAwarePromise');
       } else {
         console.log(`textRes.constructor patched: ${textResult.constructor.__zone_symbol__thenPatched}`);
       }
       textResult.then((textRes: any) => {
-        console.log(textRes.substr(0, 100));
-        this.status = 'got text'
+        logProgress('got response text');
         this.text = textRes;
       });
     });
+  }
+
+  clear() {
+    this.progress = [];
+    this.text = '---';
   }
 
 }

@@ -35,7 +35,9 @@ export class AppComponent  {
     fetchResult.then((res: any) => {
       logProgress('fetch done');
       var textResult = res.text();
-      if (textResult instanceof window['ZoneAwarePromise']) {
+      // Might not exist (only set in dev version of zone.js).
+      var ZoneAwarePromise = window['ZoneAwarePromise'];
+      if (ZoneAwarePromise && textResult instanceof ZoneAwarePromise) {
         console.log('textResult is ZoneAwarePromise');
       } else {
         console.log(`textRes.constructor patched: ${textResult.constructor.__zone_symbol__thenPatched}`);

@@ -7,7 +7,10 @@
     <link rel="stylesheet" href="styles.css">
 
     <script src="node_modules/probepromise-zone.js/probepromise.js"></script>
-    <script> probePromise('before anything'); </script>
+    <script>
+      window.ActualNativePromise = Promise;
+      probePromise('before anything');
+    </script>
 
     <!-- Polyfill(s) for older browsers -->
     <script src="node_modules/core-js/client/shim.min.js"></script>

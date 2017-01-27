@@ -16,13 +16,13 @@ import { Component } from '@angular/core';
 })
 export class AppComponent  {
   name = 'Angular';
-  progress = [];
+  progress: string[] = [];
   text = '---';
 
   fetch() {
     this.clear();
 
-    var logProgress = (state) => {
+    var logProgress = (state: string) => {
       console.log(state);
       this.progress.push(state);
     }
